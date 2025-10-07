@@ -3,16 +3,16 @@ import { logger, getRequestId } from "@/app/lib/logger";
 
 export async function GET(request, { params }) {
   const requestId = getRequestId(request);
-  const route = "/api/reviews/[bookId] [GET]";
-  const { bookId } = params;
+  const route = "/api/reviews/by-book/[id] [GET]";
+  const { id } = params;
 
-  logger.info("request start", { requestId, route, bookId });
+  logger.info("request start", { requestId, route, id });
 
   try {
-    const reviews = reviewsData.reviews.filter((r) => r.bookId === bookId);
+    const reviews = reviewsData.reviews.filter((r) => r.bookId === id);
 
     if (reviews.length === 0) {
-      logger.warn("not found", { requestId, route, bookId });
+      logger.warn("not found", { requestId, route, id });
       return Response.json({ message: "No reviews for this book" }, { status: 404 });
     }
 
@@ -29,7 +29,7 @@ export async function GET(request, { params }) {
       requestId,
       route,
       error: String(error),
-      bookId,
+      id,
     });
     return Response.json(
       { message: "Internal Server Error" },
@@ -37,4 +37,5 @@ export async function GET(request, { params }) {
     );
   }
 }
+
 
