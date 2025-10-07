@@ -38,6 +38,7 @@ export async function GET(request) {
     const results = booksData.books.filter((b) => {
       const published = new Date(b.datePublished);
       return !isNaN(published) && published >= start && published <= end;
+     
     });
 
     logger.info("request success", { requestId, route, count: results.length });

@@ -1,6 +1,25 @@
 import reviewsData from "@/app/data/reviews.json";
 import { logger, getRequestId } from "@/app/lib/logger";
 
+export async function GET(request, { params }) {
+  const requestId = getRequestId(request);
+  const route = "/api/reviews/[id] [GET]";
+  logger.info("request start", { requestId, route, id: params.id });
+  try {
+    const review = reviewsData.reviews.find(r => r.id === params.id);
+    if (!review) {
+      logger.warn("not found", { requestId, route, id: params.id });
+      return Response.json({ message: "Review not found" }, { status: 404 });
+    }
+    const res = Response.json(review);
+    logger.info("request success", { requestId, route, status: 200, id: params.id });
+    return res;
+  } catch (error) {
+    logger.error("request error", { requestId, route, error: String(error), id: params.id });
+    return Response.json({ message: "Internal Server Error" }, { status: 500 });
+  }
+}
+
 export async function PUT(request, { params }) {
   const requestId = getRequestId(request);
   const route = "/api/reviews/[id] [PUT]";
